@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="airbnb.sql" id="Project-2632" database="MySql" >
+	<schema name="public" >
+		<table name="amenity" generator_rows="337" spec="" >
+			<column name="AmenityID" type="INT" length="11" jt="4" mandatory="y" regexp="sequence:from=0;step=1;" />
+			<column name="Name" type="VARCHAR" length="255" jt="12" regexp="(Swimming Pool|Gym|Wi-Fi|Parking&#10;Garden|Pet-Friendly|Air Conditioning|BBQ Area|&#10;Hot Tub|Fireplace|Mountain View|Sauna&#10;Beach Access|Tennis Court|Private Chef|Wine Cellar|&#10;Balcony|Fitness Center|Concierge|Spa)" />
+			<column name="Description" type="TEXT" jt="-1" />
+			<column name="PropertyID" type="INT" length="11" jt="4" />
+			<index name="(`AmenityID`)" unique="UNIQUE_KEY" spec=", ADD KEY `PropertyID`" >
+				<column name="PropertyID" />
+			</index>
+			<fk name="amenity_ibfk_1" to_schema="public" to_table="property" options="" >
+				<fk_column name="PropertyID" pk="PropertyID" />
+			</fk>
+			<options><![CDATA[ENGINE=InnoDB DEFAULT CHARSET=utf8]]></options>
+		</table>
+		<table name="booking" generator_rows="150" spec="" >
+			<column name="BookingID" type="INT" length="11" jt="4" mandatory="y" regexp="sequence:from=0;step=1;" />
+			<column name="CheckInDate" type="DATE" jt="91" />
+			<column name="CheckOutDate" type="DATE" jt="91" />
+			<column name="Guests" type="INT" length="11" jt="4" regexp="int:from=0;to=20;" />
+			<column name="GuestUserID" type="INT" length="11" jt="4" />
+			<column name="ListingID" type="INT" length="11" jt="4" regexp="load_values_from_pk" />
+			<index name="(`BookingID`)" unique="UNIQUE_KEY" spec=", ADD KEY `GuestUserID`" options=", ADD KEY `ListingID` (`ListingID`)" >
+				<column name="GuestUserID" />
+			</index>
+			<fk name="booking_ibfk_1" to_schema="public" to_table="user" options=", ADD CONSTRAINT `booking_ibfk_2` FOREIGN KEY (`ListingID`) REFERENCES `listings` (`ListingID`)" >
+				<fk_column name="GuestUserID" pk="userid" />
+			</fk>
+			<fk name="fk_booking_listings" to_schema="public" to_table="listings" >
+				<fk_column name="ListingID" pk="ListingID" />
+			</fk>
+			<options><![CDATA[ENGINE=InnoDB DEFAULT CHARSET=utf8]]></options>
+		</table>
+		<table name="host" generator_rows="150" spec="" >
+			<column name="HostID" type="INT" length="11" jt="4" mandatory="y" regexp="sequence:from=0;step=1;" />
+			<column name="Host_Since" type="DATE" jt="91" />
+			<column name="About" type="TEXT" jt="-1" />
+			<column name="HostingAvailability" type="TINYINT" length="1" jt="-6" />
+			<column name="ResponseRate" type="DECIMAL" length="5" decimal="2" jt="3" regexp="double:from=0;to=99;format=###.##;" />
+			<column name="Superhost" type="TINYINT" length="1" jt="-6" />
+			<column name="userid" prior="UserID" type="INT" jt="4" />
+			<index name="(`HostID`)" unique="UNIQUE_KEY" spec=", ADD KEY `UserID`" >
+				<column name="userid" />
+			</index>
+			<fk name="host_ibfk_1" to_schema="public" to_table="user" options="" >
+				<fk_column name="userid" pk="userid" />
+			</fk>
+			<options><![CDATA[ENGINE=InnoDB DEFAULT CHARSET=utf8]]></options>
+		</table>
+		<table name="hostlanguages" generator_rows="225" spec="" >
+			<column name="LanguageName" type="VARCHAR" length="255" jt="12" mandatory="y" />
+			<column name="HostID" type="INT" length="11" jt="4" mandatory="y" />
+			<index name="pk_hostlanguages" unique="PRIMARY_KEY" >
+				<column name="LanguageName" />
+				<column name="HostID" />
+			</index>
+			<fk name="hostlanguages_ibfk_1" to_schema="public" to_table="host" options="" >
+				<fk_column name="HostID" pk="HostID" />
+			</fk>
+			<options><![CDATA[ENGINE=InnoDB DEFAULT CHARSET=utf8]]></options>
+		</table>
+		<table name="listings" generator_rows="225" spec="" >
+			<column name="ListingID" type="INT" length="11" jt="4" mandatory="y" />
+			<column name="Title" type="VARCHAR" length="255" jt="12" />
+			<column name="Description" type="TEXT" jt="-1" />
+			<column name="PriceperNight" type="DECIMAL" length="10" decimal="2" jt="3" regexp="double:from=10;to=2000;format=########.##;" />
+			<column name="HostID" type="INT" length="11" jt="4" />
+			<column name="PropertyID" type="INT" length="11" jt="4" />
+			<index name="(`ListingID`)" unique="UNIQUE_KEY" spec=", ADD KEY `HostID`" options=", ADD KEY `PropertyID` (`PropertyID`)" >
+				<column name="HostID" />
+			</index>
+			<index name="unq_listings_listingid" unique="UNIQUE_KEY" >
+				<column name="ListingID" />
+			</index>
+			<fk name="listings_ibfk_1" to_schema="public" to_table="host" options=", ADD CONSTRAINT `listings_ibfk_2` FOREIGN KEY (`PropertyID`) REFERENCES `property` (`PropertyID`)" >
+				<fk_column name="HostID" pk="HostID" />
+			</fk>
+			<fk name="fk_listings_property" to_schema="public" to_table="property" >
+				<fk_column name="PropertyID" pk="PropertyID" />
+			</fk>
+			<options><![CDATA[ENGINE=InnoDB DEFAULT CHARSET=utf8]]></options>
+		</table>
+		<table name="messages" generator_rows="150" spec="" >
+			<column name="MessageID" type="INT" length="11" jt="4" mandatory="y" regexp="sequence:from=0;step=1;" />
+			<column name="Text" type="TEXT" jt="-1" />
+			<column name="Time" type="TIMESTAMP" jt="93" mandatory="y" >
+				<defo><![CDATA[CURRENT_TIMESTAMP]]></defo>
+				<column_options><![CDATA[ON UPDATE CURRENT_TIMESTAMP]]></column_options>
+			</column>
+			<column name="SenderID" type="INT" length="11" jt="4" />
+			<column name="RecipientID" type="INT" length="11" jt="4" />
+			<index name="(`MessageID`)" unique="UNIQUE_KEY" spec=", ADD KEY `SenderID`" options=", ADD KEY `RecipientID` (`RecipientID`)" >
+				<column name="SenderID" />
+			</index>
+			<fk name="messages_ibfk_1" to_schema="public" to_table="user" options=", ADD CONSTRAINT `messages_ibfk_2` FOREIGN KEY (`RecipientID`) REFERENCES `user` (`UserID`)" >
+				<fk_column name="SenderID" pk="userid" />
+			</fk>
+			<fk name="fk_messages_user" to_schema="public" to_table="user" >
+				<fk_column name="RecipientID" pk="userid" />
+			</fk>
+			<options><![CDATA[ENGINE=InnoDB DEFAULT CHARSET=utf8]]></options>
+		</table>
+		<table name="payment" generator_rows="225" spec="" >
+			<column name="PaymentID" type="INT" length="11" jt="4" mandatory="y" regexp="sequence:from=0;step=1;" />
+			<column name="Amount" type="DECIMAL" length="10" decimal="2" jt="3" regexp="double:from=0;to=9999;format=########.##;" />
+			<column name="PaymentMethod" type="VARCHAR" length="255" jt="12" regexp="AmEx|Mastercard|VISA" />
+			<column name="TransactionDate" type="DATE" jt="91" />
+			<column name="BookingID" type="INT" length="11" jt="4" />
+			<index name="(`PaymentID`)" unique="UNIQUE_KEY" spec=", ADD KEY `BookingID`" >
+				<column name="BookingID" />
+			</index>
+			<fk name="payment_ibfk_1" to_schema="public" to_table="booking" options="" >
+				<fk_column name="BookingID" pk="BookingID" />
+			</fk>
+			<options><![CDATA[ENGINE=InnoDB DEFAULT CHARSET=utf8]]></options>
+		</table>
+		<table name="photos" generator_rows="337" spec="" >
+			<column name="PhotoID" type="INT" length="11" jt="4" mandatory="y" regexp="sequence:from=0;step=1;" />
+			<column name="URL_Image" type="TEXT" jt="-1" regexp="http://[a-z]{3,5}.(web|net|local)[a-z]{0,1}[0-9]{0,2}/([a-z]{5}/){1,4}[a-z]{3,5}.(html|htm|php|aspx)" />
+			<column name="ListingID" type="INT" length="11" jt="4" />
+			<index name="(`PhotoID`)" unique="UNIQUE_KEY" spec=", ADD KEY `ListingID`" >
+				<column name="ListingID" />
+			</index>
+			<fk name="photos_ibfk_1" to_schema="public" to_table="listings" options="" >
+				<fk_column name="ListingID" pk="ListingID" />
+			</fk>
+			<options><![CDATA[ENGINE=InnoDB DEFAULT CHARSET=utf8]]></options>
+		</table>
+		<table name="property" generator_rows="225" spec="" >
+			<column name="PropertyID" type="INT" length="11" jt="4" mandatory="y" regexp="sequence:from=0;step=1;" />
+			<column name="Address" type="TEXT" jt="-1" />
+			<column name="City" type="VARCHAR" length="255" jt="12" />
+			<column name="State" type="VARCHAR" length="255" jt="12" />
+			<column name="Zip" type="VARCHAR" length="10" jt="12" />
+			<column name="Category" type="VARCHAR" length="30" jt="12" regexp="(Seaside|Loft|Lakefront|Cabins|Mansions|Tinyhomes|Beachfront)" />
+			<column name="Bedrooms" type="INT" length="11" jt="4" regexp="int:from=1;to=10;" />
+			<column name="Bathrooms" type="INT" length="11" jt="4" regexp="int:from=1;to=10;" />
+			<column name="AirbnbPlus" type="TINYINT" length="1" jt="-6" />
+			<column name="HostID" type="INT" length="11" jt="4" />
+			<index name="(`PropertyID`)" unique="UNIQUE_KEY" spec=", ADD KEY `HostID`" >
+				<column name="HostID" />
+			</index>
+			<index name="unq_property_propertyid" unique="UNIQUE_KEY" >
+				<column name="PropertyID" />
+			</index>
+			<fk name="property_ibfk_1" to_schema="public" to_table="host" options="" >
+				<fk_column name="HostID" pk="HostID" />
+			</fk>
+			<options><![CDATA[ENGINE=InnoDB DEFAULT CHARSET=utf8]]></options>
+		</table>
+		<table name="reviews" generator_rows="337" spec="" >
+			<column name="ReviewID" type="INT" length="11" jt="4" mandatory="y" regexp="sequence:from=0;step=1;" />
+			<column name="Rating" type="INT" length="11" jt="4" regexp="float:from=0;to=5;" />
+			<column name="Comments" type="TEXT" jt="-1" />
+			<column name="ListingID" type="INT" length="11" jt="4" />
+			<column name="UserID" type="INT" length="11" jt="4" />
+			<index name="(`ReviewID`)" unique="UNIQUE_KEY" spec=", ADD KEY `ListingID`" options=", ADD KEY `UserID` (`UserID`)" >
+				<column name="ListingID" />
+			</index>
+			<fk name="reviews_ibfk_1" to_schema="public" to_table="listings" options=", ADD CONSTRAINT `reviews_ibfk_2` FOREIGN KEY (`UserID`) REFERENCES `user` (`UserID`)" >
+				<fk_column name="ListingID" pk="ListingID" />
+			</fk>
+			<fk name="fk_reviews_user" to_schema="public" to_table="user" >
+				<fk_column name="UserID" pk="userid" />
+			</fk>
+			<options><![CDATA[ENGINE=InnoDB DEFAULT CHARSET=utf8]]></options>
+		</table>
+		<table name="user" generator_rows="100" spec="" >
+			<column name="userid" prior="UserID" type="INT" length="11" jt="4" mandatory="y" regexp="sequence:from=0;step=1;" />
+			<column name="username" prior="Username" type="VARCHAR" length="255" jt="12" />
+			<column name="Email" type="VARCHAR" length="255" jt="12" />
+			<column name="Password" type="VARCHAR" length="255" jt="12" regexp="((I|John|Cindy) (met|knows|is visiting|called) (Rolph|Tony|Adrian|Florian|Mike|Poe). )" />
+			<column name="DateOfBirth" type="DATE" jt="91" />
+			<column name="contactinformation" prior="ContactInformation" type="VARCHAR" length="10" jt="12" regexp="[0-9]{10}" />
+			<index name="pk_user" unique="PRIMARY_KEY" >
+				<column name="userid" />
+			</index>
+			<options><![CDATA[ENGINE=InnoDB DEFAULT CHARSET=utf8]]></options>
+		</table>
+	</schema>
+	<layout name="Layout" id="Layout-23cf" show_relation="columns" >
+		<entity schema="public" name="amenity" color="BED3F4" x="848" y="528" />
+		<entity schema="public" name="booking" color="C7F4BE" x="1360" y="48" />
+		<entity schema="public" name="host" color="BED3F4" x="400" y="272" />
+		<entity schema="public" name="hostlanguages" color="BED3F4" x="400" y="528" />
+		<entity schema="public" name="listings" color="BED3F4" x="640" y="272" />
+		<entity schema="public" name="messages" color="C7F4BE" x="1360" y="304" />
+		<entity schema="public" name="payment" color="C7F4BE" x="1584" y="48" />
+		<entity schema="public" name="photos" color="BED3F4" x="864" y="272" />
+		<entity schema="public" name="property" color="BED3F4" x="640" y="528" />
+		<entity schema="public" name="reviews" color="BED3F4" x="432" y="48" />
+		<entity schema="public" name="user" color="C7F4BE" x="1104" y="48" />
+		<callout x="48" y="400" pointer="Round" >
+			<comment><![CDATA[Add tables to the layout diagram (here) by drag & drop from the Project Tree.
+Drop this callout from its right-click pop-up.]]></comment>
+		</callout>
+	</layout>
+</project>

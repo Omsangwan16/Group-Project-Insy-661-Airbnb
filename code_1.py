@@ -10,6 +10,10 @@ st.title('Group 8 INSY 661 - Airbnb')
 
 # Initialize connection.
 conn = st.experimental_connection('mysql', type='sql')
+
+
+
+
 queries, schema, user_interaction = st.tabs(["Queries", "Database Schema", "Interact With Database"])
 
 

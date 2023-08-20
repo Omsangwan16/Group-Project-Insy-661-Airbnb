@@ -6,3 +6,4 @@ port = 17389
 database = "insy661"
 username = "avnadmin"
 password = "AVNS_o16_GWpWBDbNPkA0x_t"
+charset = "utf8mb4"

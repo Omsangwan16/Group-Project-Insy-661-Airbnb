@@ -31,7 +31,7 @@ WHERE PropertyID = 7;
 """,
         """
 SELECT COUNT(*)
-FROM Property p JOIN listings l ON p.PropertyID=l.PropertyID 
+FROM property p JOIN listings l ON p.PropertyID=l.PropertyID 
 WHERE p.Bedrooms>=2;
 """,
         """
@@ -88,8 +88,8 @@ GROUP BY h.HostID, h.UserID;
 """,
         """
 SELECT u.UserID, u.Username, COUNT(b.BookingID) AS BookingCount
-FROM User u
-JOIN Booking b ON u.UserID = b.GuestUserID
+FROM user u
+JOIN booking b ON u.UserID = b.GuestUserID
 GROUP BY u.UserID, u.Username
 ORDER BY BookingCount DESC
 LIMIT 1;
@@ -105,22 +105,22 @@ LIMIT 10;
 """,
         """
 SELECT PaymentMethod, AVG(Amount) AS AvgPaymentAmount
-FROM Payment
+FROM payment
 GROUP BY PaymentMethod;
 """,
         """
 SELECT h.HostID, COUNT(p.PropertyID) AS AirbnbPlusCount
-FROM Host h
-JOIN Property p ON h.HostID = p.HostID
+FROM host h
+JOIN property p ON h.HostID = p.HostID
 WHERE p.AirbnbPlus = TRUE
 GROUP BY h.HostID
 HAVING AirbnbPlusCount > 1;
 
 """,
         """
-SELECT m.MessageID, m.Text, m.Time, u1.Username AS Sender, u2.Username AS Recipient FROM Messages m
-JOIN User u1 ON m.SenderID = u1.UserID
-JOIN User u2 ON m.RecipientID = u2.UserID
+SELECT m.MessageID, m.Text, m.Time, u1.Username AS Sender, u2.Username AS Recipient FROM messages m
+JOIN user u1 ON m.SenderID = u1.UserID
+JOIN user u2 ON m.RecipientID = u2.UserID
 WHERE u1.UserID IN (SELECT DISTINCT HostID FROM host)
 AND u2.UserID IN (SELECT DISTINCT GuestUserID FROM booking);
 """,

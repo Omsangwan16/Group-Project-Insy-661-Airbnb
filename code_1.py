@@ -33,7 +33,7 @@ with queries:
                 num=num+1
 with schema:
     st.subheader('Database Schema')
-    st.image('schema.jpg', use_column_width=True)
+    st.image('schema.jpeg')
 
 with user_interaction:
             query_code = st.text_input("Enter your query:")

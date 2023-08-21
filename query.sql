@@ -18,8 +18,8 @@ WHERE p.Bedrooms>=2;
 
 
 /*
-Title: Redefine the Superhost column based on a new criteria, say response rate >80% , avg rating of listings > 4.5 and they know at least 2 languages.
-Business Objective: Update the Superhost status for hosts based on criteria such as response rate, average listing rating, and language proficiency, to identify hosts that offer exceptional guest experiences.
+Title: Get the superhosts from the data based on an updated criteria, response rate >80% , avg rating of listings > 4.5 and they know at least 2 languages.
+Business Objective: Fetch the updated superhosts based on criteria such as response rate, average listing rating, and language proficiency, to identify hosts that offer exceptional guest experiences.
 */
 CREATE VIEW superhost AS
 SELECT h.HostID,h.ResponseRate, COUNT(h.HostID) AS languageno, 

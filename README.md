@@ -45,16 +45,8 @@ Process:
    File Structure:
 
 
-4. **Organize your project files:**
+4. **Create & Organize your project files:**
 
-├── app.py
-├── schema.jpeg
-├── query.sql
-├── .streamlit/secrets.toml
-├── helper.py
-└── README.md
-Building the Streamlit App
-app.py:
 
 Create a Streamlit web application (app.py) with the provided code.
 
